@@ -15,18 +15,19 @@ class Round {
     }
 }
 const messages = [
-	"Welcome to Night of the Parasitic Worms!",
+	"Welcome to Night of the Parasitic Worms! For more information visit: https://github.com/dahnte/parasitic-worms",
 	"Huddle around the campfire as the parasites seek out their host.",
 	"Parasites have begun their infestation. You are now a parasite and must infect the remaining blue worms!",
+	"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
 ];
 console.log("Running Server...");
 const admins = new Set(["6zgUYjs_v504BzseshPSLgv7B4A3TU1v-jl0BMISJtA"]); // Add your own player auth here.
 let round = new Round();
 const room = window.WLInit({
     token: window.WLTOKEN,
-    roomName: "Night of the Parasitic Worms",
-    maxPlayers: 30,
-    public: false,
+    roomName: "Night of the Parasitic Worms!",
+    maxPlayers: 12,
+    public: true,
 });
 window.WLROOM = room;
 room.setSettings({
@@ -46,7 +47,8 @@ function selectParasiteHost() {
     let playerIndex = Math.floor(Math.random() * listLength) + 1;
 	let hostParasite = room.getPlayer(playerIndex);
     room.setPlayerTeam(hostParasite.id, 1);
-	room.sendAnnouncement(`${hostParasite.name} has become a host for parasites! Dont let them kill you..`, undefined, 0xF40000, "bold");
+	room.sendAnnouncement(`${hostParasite.name} has become the parasitic host!`, undefined, 0xF40000, "bold");
+	room.sendAnnouncement("Careful, death of any cause will result in parasitic infection.", undefined, 0xF40000, "normal");
 }
 function getRemainingSurvivorAmount() {
 	let remainingSurvivor = room.getPlayerList().length;
@@ -66,7 +68,7 @@ function* waitForSeconds(seconds) {
 function* roundLogic() {
     round = new Round();
 	while (round.state == "new") {
-		yield* waitForSeconds(3);
+		yield* waitForSeconds(8);
 		if (room.getPlayerList().length < 3) {
 			room.sendAnnouncement("Need at least three players to start!");
 		}
@@ -81,12 +83,13 @@ function* roundLogic() {
 		room.onPlayerJoin = (player) => {
 			room.setPlayerTeam(player.id, 1);
 			room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
-			room.sendAnnouncement(messages[2], player.id, 0xF40000, "bold", 0);
+			room.sendAnnouncement(messages[2], player.id, 0x66CCFF, "normal", 0);
+			room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
 		}
 		room.onPlayerKilled = (killed, killer) => {
 			if (killed.team == 2) {
 				room.setPlayerTeam(killed.id, 1);
-				room.sendAnnouncement(`${killed.name} has been infected!`, undefined, 0xF40000, "bold");
+				room.sendAnnouncement(`${killed.name} has been infected!`, undefined, 0xF40000, "normal");
 				room.sendAnnouncement(`The parasites gained ${round.livesMultiplier} lives!`);
 				round.lives = round.lives + round.livesMultiplier;
 				round.remainingWorms--;
@@ -103,7 +106,7 @@ function* roundLogic() {
 		}
 		getRemainingSurvivorAmount();
 		if (round.remainingWorms <= 0) {
-			room.sendAnnouncement("The parasites have taken over the worms!", undefined, 0xF40000, "bold");
+			room.sendAnnouncement("The parasites have successfully taken over the room!", undefined, 0xF40000, "bold");
 			round.endFlag = 1;
 			break;
 		}
@@ -118,7 +121,8 @@ room.onRoomLink = (link) => console.log(link);
 room.onCaptcha = () => console.log("Invalid token");
 room.onPlayerJoin = (player) => {
 	room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
-	room.sendAnnouncement(messages[1], player.id, 0x66CCFF, "bold", 0);
+	room.sendAnnouncement(messages[1], player.id, 0x66CCFF, "normal", 0);
+	room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
     for (let player of room.getPlayerList()) {
         if (admins.has(player.auth)) {
 	        room.setPlayerAdmin(player.id, true);
