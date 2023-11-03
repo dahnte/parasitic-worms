@@ -19,6 +19,7 @@ For the most basic setup, run this script in console at [Webliero Headless](http
 ## Technical
 *Currently the only way to change the script's parameters is through console or altering the script before running*
 
+
 The Round() constructor allows for easy changes to the script's behavior:
 - round.lives - Controls the starting amount of collective lives that parasites start with
 - round.livesMultiplier - Controls how many lives are added when there is an infection
