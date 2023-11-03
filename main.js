@@ -96,7 +96,12 @@ function* roundLogic() {
 			}
 			else if (killed.team == 1) {
 				round.lives--;
-				room.sendAnnouncement(`The parasites have ${round.lives} lives remaining!`);
+				if (round.lives == 1) {
+					room.sendAnnouncement(`The parasites have ${round.lives} life remaining!`);
+				}
+				else {
+					room.sendAnnouncement(`The parasites have ${round.lives} lives remaining!`);
+				}
 			}
 		}
 		if (round.lives <= 0) {
