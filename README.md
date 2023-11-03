@@ -1,5 +1,5 @@
 # Parasitic Worms
-An *infection mode* roomscript for [WebLiero](https://www.webliero.com/).
+An *infection mode* room script for [WebLiero](https://www.webliero.com/).
 
 ## Gameplay
 Once there are enough players in the room a random player is selected as the *parasitic host (as of right now, the parasitic worm has no special abilities)*.
@@ -23,6 +23,7 @@ For the most basic setup, run this script in console at [Webliero Headless](http
 The Round() constructor allows for easy changes to the script's behavior:
 - round.lives - Controls the starting amount of collective lives that parasites start with
 - round.livesMultiplier - Controls how many lives are added when there is an infection
+- round.parasiticHost - Holds information about the parasitic host
 
 ## Bugs & Planned features
 No known bugs at the moment.
@@ -30,6 +31,8 @@ No known bugs at the moment.
 Eventually a sounds/sprites/mod made for the script would be great, for now this is all up to your preferences.
 
 In-game commands to change game parameters.
+
+Limit available weapons to parasites.
 
 Possible scaling as to how many *parasitic hosts* are chosen depending on room size.
 
