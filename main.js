@@ -6,6 +6,7 @@ class Round {
 		this.livesMultiplier = 2;
 		this.remainingWorms = 0;
 		this.endFlag = 0;
+		this.parasiticHost = null;
     }
     start() {
         if (room.getPlayerList().length < 3) {
@@ -37,27 +38,27 @@ room.setSettings({
 	levelPool: "allBest",
 });
 
-function moveAllPlayersToNematode() {
+function moveAllPlayersToBlue() {
     for (let player of room.getPlayerList()) {
         room.setPlayerTeam(player.id, 2);
     }
 }
-function selectParasiteHost() {
+function selectParasiticHost() {
 	let listLength = room.getPlayerList().length;
     let playerIndex = Math.floor(Math.random() * listLength) + 1;
-	let hostParasite = room.getPlayer(playerIndex);
-    room.setPlayerTeam(hostParasite.id, 1);
-	room.sendAnnouncement(`${hostParasite.name} has become the parasitic host!`, undefined, 0xF40000, "bold");
+	round.parasiticHost = room.getPlayer(playerIndex);
+    room.setPlayerTeam(round.parasiticHost.id, 1);
+	room.sendAnnouncement(`${round.parasiticHost.name} has become the parasitic host!`, undefined, 0xF40000, "bold");
 	room.sendAnnouncement("Careful, death of any cause will result in parasitic infection.", undefined, 0xF40000, "normal");
 }
-function getRemainingSurvivorAmount() {
-	let remainingSurvivor = room.getPlayerList().length;
+function getRemainingBlue() {
+	let remainingBlue = room.getPlayerList().length;
 	for (let player of room.getPlayerList()) {
 		if (player.team == 1) {
-			remainingSurvivor--;
+			remainingBlue--;
 		}
 	}
-	round.remainingWorms = remainingSurvivor;
+	round.remainingWorms = remainingBlue;
 }
 function* waitForSeconds(seconds) {
     const end = window.performance.now() + seconds * 1000;
@@ -76,16 +77,10 @@ function* roundLogic() {
 			round.start();	
 		}
 	}
-	moveAllPlayersToNematode();
-	selectParasiteHost();
+	moveAllPlayersToBlue();
+	selectParasiticHost();
     while (round.state == "playing") {
         yield null;
-		room.onPlayerJoin = (player) => {
-			room.setPlayerTeam(player.id, 1);
-			room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
-			room.sendAnnouncement(messages[2], player.id, 0x66CCFF, "normal", 0);
-			room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
-		}
 		room.onPlayerKilled = (killed, killer) => {
 			if (killed.team == 2) {
 				room.setPlayerTeam(killed.id, 1);
@@ -109,7 +104,7 @@ function* roundLogic() {
 			round.endFlag = 1;
 			break;
 		}
-		getRemainingSurvivorAmount();
+		getRemainingBlue();
 		if (round.remainingWorms <= 0) {
 			room.sendAnnouncement("The parasites have successfully taken over the room!", undefined, 0xF40000, "bold");
 			round.endFlag = 1;
@@ -125,14 +120,28 @@ function* roundLogic() {
 room.onRoomLink = (link) => console.log(link);
 room.onCaptcha = () => console.log("Invalid token");
 room.onPlayerJoin = (player) => {
-	room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
-	room.sendAnnouncement(messages[1], player.id, 0x66CCFF, "normal", 0);
-	room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
+	if (round.state == "playing") {
+			room.setPlayerTeam(player.id, 1);
+			room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
+			room.sendAnnouncement(messages[2], player.id, 0x66CCFF, "normal", 0);
+			room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
+	}
+	else {
+		room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
+		room.sendAnnouncement(messages[1], player.id, 0x66CCFF, "normal", 0);
+		room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
+	}
     for (let player of room.getPlayerList()) {
         if (admins.has(player.auth)) {
 	        room.setPlayerAdmin(player.id, true);
 		}
     }
+};
+room.onPlayerLeave = (player) => {
+	if (player.id == round.parasiticHost.id) {
+		round.parasiticHost = null;
+		selectParasiticHost();
+	}
 };
 
 let t = roundLogic();
