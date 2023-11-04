@@ -110,7 +110,12 @@ function* roundLogic() {
 			if (killed.team == 2) {
 				room.setPlayerTeam(killed.id, 1);
 				room.sendAnnouncement(`${killed.name} has been infected!`, undefined, 0xF40000, "normal");
-				room.sendAnnouncement(`The parasites gained ${round.livesMultiplier} lives!`);
+				if (round.livesMultiplier == 1) {
+					room.sendAnnouncement(`The parasites gained ${round.livesMultiplier} life!`);
+				}
+				else {
+					room.sendAnnouncement(`The parasites gained ${round.livesMultiplier} lives!`);
+				}
 				round.lives = round.lives + round.livesMultiplier;
 			}
 			if (killed.team == 1) {
