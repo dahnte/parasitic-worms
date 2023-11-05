@@ -23,14 +23,14 @@ For the most basic setup, run this script in console at [Webliero Headless](http
 *Currently the only way to change the script's parameters is through console or altering the script before running*
 
 
-The 'Round()' constructor allows for easy changes to the script's behavior:
-- 'round.lives' - Controls the starting amount of collective lives that parasites start with (default is 4)
-- 'round.livesMultiplier' - Controls how many lives are added when there is an infection (default is 1)
-- 'round.parasiticHost' - Holds player information about the parasitic host
-- 'round.remainingWorms' - Holds amount of blue members left
-- 'round.remainingParasites' - Holds amount of green members left
-- 'round.endFlag' - 1 = round end, 0 = round alive
-- 'round.playerListId' - Holds a list of all current players' ID
+The `Round()` constructor allows for easy changes to the script's behavior:
+- `round.lives` - Controls the starting amount of collective lives that parasites start with (default is 4)
+- `round.livesMultiplier` - Controls how many lives are added when there is an infection (default is 1)
+- `round.parasiticHost` - Holds player information about the parasitic host
+- `round.remainingWorms` - Holds amount of blue members left
+- `round.remainingParasites` - Holds amount of green members left
+- `round.endFlag` - 1 = round end, 0 = round alive
+- `round.playerListId` - Holds a list of all current players ID
 
 ## Bugs
 - If the room reaches < 3 players mid round the game continues as usual, however it corrects itself once there are > 3 players.
