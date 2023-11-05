@@ -2,19 +2,17 @@
 An *infection mode* room script for [WebLiero](https://www.webliero.com/).
 
 ## Gameplay
-Once there are enough players in the room a random player is selected as the *parasitic host (as of right now, the parasitic worm has no special abilities)*.
-Soon after the *parasitic host* is put on the green team and the remaining players are put on the blue team.
+### Round start
+When the room reaches >2 players all the works are moved to the blue team. Then the parasitic host is randomly chosen from the blue team and moved to the green team. The parasites (green team) start with the default amount of 4 collective lives.
 
-At the start of the round, the parasites (green team) start with a collective amount of lives (default is 4).
+### Mid round
+When a worm (blue team) dies they become infected and join the parasites. Worm infection also results in the parasites gaining the default amount of +1  to their collective lives. When a parasite dies -1  life is removed from their collective lives.
 
-Once a worm (blue team) dies, either by the parasites or friendly fire, they become infected. Which means they join the parasites.
-If a parasite (green team) dies they remain on the same team, however, for each death 1 life is removed from their collective lives.
+### Win conditions
+The worms win by bringing down the parasites collective lives down to 0. The parasites win by infecting all the worms.
 
-The blue team wins by bringing down the parasites collective lives down to 0.
-The green team wins by infecting all the worms. Keep in mind, each infection adds to the collective lives (default lives multiplier is 1).
-
-When a parasitic host leaves mid-round, a new host will be chosen.
-If there are existing green team members then the host is randomly chosen from the green team only. If there are no existing green team members then the host is randomly chosen from the blue team.
+### Additional
+When a parasitic host leaves mid-round, a new host will be chosen. If there are existing parasites then the host is randomly chosen from the parasites. If there are no existing parasites then the host is randomly chosen from the worms.
 
 ## Setup
 For the most basic setup, run this script in console at [Webliero Headless](https://www.webliero.com/headless).
