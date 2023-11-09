@@ -1,5 +1,5 @@
 mod generated with wlkit 0.52 
- - name: Parasitic Worms
+ - name: $Parasitic Worms
  - author: Joosa Riekkinen, planarian
  - weapons: 41
 	- BAZOOKA
@@ -32,11 +32,11 @@ mod generated with wlkit 0.52
 	- MINI ROCKETS
 	- MINIGUN
 	- MISSILE
-	- PARASITIC BITE
-	- PARASITIC BOOBY TRAP
-	- PARASITIC SPIKEBALLS
-	- PARASITIC ZIMM
-	- PNAPALM
+	- NAPALM
+	- P BITE
+	- P BOOBY TRAP
+	- P SPIKEBALLS
+	- P ZIMM
 	- RB RAMPAGE
 	- RIFLE
 	- SHOTGUN
