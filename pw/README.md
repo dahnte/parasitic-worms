@@ -1,5 +1,5 @@
 # Parasitic Worms (PW) mod
-This mod is specifically made for the parasitic worms room script. It's a direct copy of the Liero 1.33 mod with an additional weapon and variation of already existing weapons.
+This mod meant to run alongside the parasitic worms room script. It's a direct copy of the Liero 1.33 mod with an additional weapon and variation of already existing weapons.
 
 Thanks to Joosa Riekkinen for the original mod and Ophi, dsds, wgetch, roo for wledit.
 
