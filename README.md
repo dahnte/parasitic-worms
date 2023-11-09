@@ -7,5 +7,5 @@ Includes the vanilla verson of the room script. Does not require the extended ha
 ## [extended script](https://github.com/dahnte/parasitic-worms/tree/main/extended)
 Includes the extended version of the room script, includes all key features!
 
-## [mod](https://github.com/dahnte/parasitic-worms/tree/main/pw)
+## [mod](https://github.com/dahnte/parasitic-worms/tree/main/mod)
 The mod that runs alongside the room script.
