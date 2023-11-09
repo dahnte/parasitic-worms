@@ -30,7 +30,7 @@ const room = window.WLInit({
     token: window.WLTOKEN,
     roomName: "Night of the Parasitic Worms!",
     maxPlayers: 12,
-    public: false,
+    public: true,
 });
 window.WLROOM = room;
 room.setSettings({
