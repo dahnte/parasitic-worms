@@ -1,4 +1,24 @@
 "use strict";
+var modCache = new Map();
+async function getModData(modUrl) {    
+    let obj = modCache.get(modUrl)
+    if (obj) {
+      return obj;
+    }
+    try {
+        obj = await (await fetch(modUrl)).arrayBuffer();        
+    }catch(e) {
+        return null;
+    }
+
+    
+    modCache.set(modUrl, obj)
+    return obj;
+}
+async function loadMod(modname) {
+    const mod = await getModData(modname)
+    window.WLROOM.loadMod(mod);
+}
 class Round {
     constructor() {
         this.state = "new";
@@ -21,6 +41,7 @@ const messages = [
 	"Welcome to Parasitic Worms: Extended! For more information visit: https://github.com/dahnte/parasitic-worms",
 	"Huddle around the campfire as the parasites seek out their host.",
 	"Parasites have begun their infestation. You are now a parasite and must infect the remaining blue worms!",
+	"**WARNING** Configure your loadout before spawning! This will be your blue team loadout, avoid the prefix 'P'!",
 	"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
 ];
 console.log("Running Server...");
@@ -30,16 +51,15 @@ const room = window.WLInit({
     token: window.WLTOKEN,
     roomName: "Parasitic Worms: Extended!",
     maxPlayers: 12,
-    public: true,
+    public: false,
 });
 window.WLROOM = room;
-room.setSettings({
+room.setSettings({  
     gameMode: "tdm",
     teamsLocked: true,
     damageMultiplier: 1,
 	levelPool: "allBest",
 });
-
 function moveAllPlayersToBlue() {
     for (let player of room.getPlayerList()) {
         room.setPlayerTeam(player.id, 2);
@@ -119,6 +139,7 @@ function* roundLogic() {
 				round.lives = round.lives + round.livesMultiplier;
 			}
 			if (killed.team == 1) {
+				room.createBonus(-2, killed.x, killed.y, null) // spawn non-explosive health pack
 				round.lives--;
 				if (round.lives == 1) {
 					room.sendAnnouncement(`The parasites have ${round.lives} life remaining!`);
@@ -146,7 +167,6 @@ function* roundLogic() {
 		t = roundLogic();
 	}
 }
-
 room.onRoomLink = (link) => console.log(link);
 room.onCaptcha = () => console.log("Invalid token");
 room.onPlayerJoin = (player) => {
@@ -156,13 +176,15 @@ room.onPlayerJoin = (player) => {
 	if (round.state == "playing") {
 			room.setPlayerTeam(player.id, 1);
 			room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
+			room.sendAnnouncement(messages[3], player.id, 0xFF9900, "bold", 0);
 			room.sendAnnouncement(messages[2], player.id, 0x66CCFF, "normal", 0);
-			room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
+			room.sendAnnouncement(messages[4], player.id, 0x66CCFF, "normal", 0);
 	}
 	else {
 		room.sendAnnouncement(messages[0], player.id, 0x66CCFF, "bold", 0);
+		room.sendAnnouncement(messages[3], player.id, 0xFF9900, "bold", 0);
 		room.sendAnnouncement(messages[1], player.id, 0x66CCFF, "normal", 0);
-		room.sendAnnouncement(messages[3], player.id, 0x66CCFF, "normal", 0);
+		room.sendAnnouncement(messages[4], player.id, 0x66CCFF, "normal", 0);
 	}
 };
 room.onPlayerLeave = (player) => {
@@ -178,7 +200,26 @@ room.onPlayerLeave = (player) => {
 		}
 	}
 };
-
+room.onPlayerSpawn = (player) => {
+	if (player.team == 1) {
+		room.setPlayerWeapons(player.id, ['40', '29', '21', '34', '30', '1', '2', '2', '4', '2']);
+	}
+	/*
+	if (player.team == 2) {
+		let playerWeapons = [];
+		for (let weapon of window.WLROOM.getPlayerWeapons(player.id)) {
+			if (weapon.id == '40' || weapon.id == '29' || weapon.id == '21' || weapon.id == '34') {
+				playerWeapons[weapon.index] = '3';
+			}
+			else {
+				playerWeapons[weapon.index] = weapon.id;
+			}
+		}
+		window.WLROOM.setPlayerWeapons(player.id, playerWeapons);
+	}
+ */
+};
 let t = roundLogic();
 setInterval(() => t.next(), 100);
 room.restartGame();
+loadMod('https://dahnte.github.io/liero/Parasitic_Worms.zip');
