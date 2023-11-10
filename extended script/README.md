@@ -3,7 +3,7 @@
 When the room reaches >2 players all the works are moved to the blue team. Then the parasitic host is randomly chosen from the blue team and moved to the green team. The parasites (green team) start with the default amount of 4 collective lives.
 
 ### Mid round
-When a worm (blue team) dies they become infected and join the parasites. Worm infection also results in the parasites gaining the default amount of +1  to their collective lives. When a parasite dies -1  is removed from their collective lives.
+When a worm (blue team) dies they become infected and join the parasites. Worm infection also results in the parasites gaining the default amount of +1  to their collective lives. When a parasite dies -1  is removed from their collective lives and they drop a health kit.
 
 ### Win conditions
 The worms win by bringing down the parasites collective lives down to 0. The parasites win by infecting all the worms.
