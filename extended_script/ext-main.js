@@ -1,32 +1,14 @@
 "use strict";
-var modCache = new Map();
-async function getModData(modUrl) {    
-    let obj = modCache.get(modUrl)
-    if (obj) {
-      return obj;
-    }
-    try {
-        obj = await (await fetch(modUrl)).arrayBuffer();        
-    }catch(e) {
-        return null;
-    }
-
-    
-    modCache.set(modUrl, obj)
-    return obj;
-}
-async function loadMod(modname) {
-    const mod = await getModData(modname)
-    window.WLROOM.loadMod(mod);
-}
 class Round {
     constructor() {
         this.state = "new";
 		this.lives = 4;
-		this.livesMultiplier = 1;
+		this.livesAdded = 1;
 		this.remainingWorms = 0;
 		this.remainingParasites = 0;
 		this.parasiticHost = null;
+		this.hostLoadout = ['40', '29', '21', '34', '30', '1', '2', '2', '4', '2'];
+		this.parasiteLoadout = ['40', '40', '40', '40', '40', '1', '1', '1', '1', '1'];
 		this.endFlag = 0;
 		this.playerListId = [];
     }
@@ -51,7 +33,7 @@ const room = window.WLInit({
     token: window.WLTOKEN,
     roomName: "Parasitic Worms: Extended!",
     maxPlayers: 12,
-    public: false,
+    public: true,
 });
 window.WLROOM = room;
 room.setSettings({  
@@ -78,8 +60,9 @@ function selectParasiticHost(selectedTeam) {
 	round.parasiticHost = room.getPlayer(round.playerListId[randomIndex]);
 	if (round.parasiticHost != null) {
 		room.setPlayerTeam(round.parasiticHost.id, 1);
-		room.sendAnnouncement(`${round.parasiticHost.name} has become the parasitic host!`, undefined, 0xF40000, "bold");
+		room.sendAnnouncement(`${round.parasiticHost.name} has become the parasitic host. The parasitic host is the only parasite that is equipped with ranged attacks!`, undefined, 0xF40000, "bold");
 		room.sendAnnouncement("Careful, death of any cause will result in parasitic infection.", undefined, 0xF40000, "normal");
+		room.setPlayerWeapons(round.parasiticHost.id, round.hostLoadout);
 	}
 	else {
 		round.parasiticHost = null;
@@ -130,16 +113,16 @@ function* roundLogic() {
 			if (killed.team == 2) {
 				room.setPlayerTeam(killed.id, 1);
 				room.sendAnnouncement(`${killed.name} has been infected!`, undefined, 0xF40000, "normal");
-				if (round.livesMultiplier == 1) {
-					room.sendAnnouncement(`The parasites gained ${round.livesMultiplier} life!`);
+				if (round.livesAdded == 1) {
+					room.sendAnnouncement(`The parasites gained ${round.livesAdded} life!`);
 				}
 				else {
-					room.sendAnnouncement(`The parasites gained ${round.livesMultiplier} lives!`);
+					room.sendAnnouncement(`The parasites gained ${round.livesAdded} lives!`);
 				}
-				round.lives = round.lives + round.livesMultiplier;
+				round.lives = round.lives + round.livesAdded;
 			}
 			if (killed.team == 1) {
-				room.createBonus(-2, killed.x, killed.y, null) // spawn non-explosive health pack
+				room.createBonus(-2, killed.x, killed.y, null)
 				round.lives--;
 				if (round.lives == 1) {
 					room.sendAnnouncement(`The parasites have ${round.lives} life remaining!`);
@@ -166,6 +149,26 @@ function* roundLogic() {
 		room.endGame();
 		t = roundLogic();
 	}
+}
+var modCache = new Map();
+async function getModData(modUrl) {    
+    let obj = modCache.get(modUrl)
+    if (obj) {
+      return obj;
+    }
+    try {
+        obj = await (await fetch(modUrl)).arrayBuffer();        
+    }catch(e) {
+        return null;
+    }
+
+    
+    modCache.set(modUrl, obj)
+    return obj;
+}
+async function loadMod(modname) {
+    const mod = await getModData(modname)
+    window.WLROOM.loadMod(mod);
 }
 room.onRoomLink = (link) => console.log(link);
 room.onCaptcha = () => console.log("Invalid token");
@@ -201,8 +204,13 @@ room.onPlayerLeave = (player) => {
 	}
 };
 room.onPlayerSpawn = (player) => {
-	if (player.team == 1) {
-		room.setPlayerWeapons(player.id, ['40', '29', '21', '34', '30', '1', '2', '2', '4', '2']);
+	if (round.state == "playing") {
+		if (player.id == round.parasiticHost.id) {
+			room.setPlayerWeapons(player.id, round.hostLoadout);
+		}
+		else if ((player.id != round.parasiticHost.id) && (player.team == 1)) {
+			room.setPlayerWeapons(player.id, round.parasiteLoadout);
+		}
 	}
 	/*
 	if (player.team == 2) {
