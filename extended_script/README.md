@@ -15,7 +15,7 @@ When a parasitic host leaves mid-round, a new host will be chosen. If there are 
 For the most basic setup, redirect `/v/20/headless-min.js` to `https://sylvodsds.gitlab.io/webliero-extended-scripts/headless-extended.js` in headless to host an Extended room.
 After you do this run this script in console at [Webliero Headless](https://www.webliero.com/headless).
 
-More information on extended [here](https://www.vgm-quiz.com/dev/webliero/extended).
+More information on Extended [here](https://www.vgm-quiz.com/dev/webliero/extended).
 
 ## Technical
 *Currently the only way to change the script's parameters is through console or altering the script before running*
