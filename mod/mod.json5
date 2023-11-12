@@ -19,8 +19,7 @@
       "launchSound": 0,
       "playReloadSound": true,
       "name": "SHOTGUN",
-      "id": 0,
-      "reloadSound": -1
+      "id": 0
     },
     {
       "parts": 1,
@@ -40,8 +39,7 @@
       "launchSound": 1,
       "playReloadSound": true,
       "name": "CHAINGUN",
-      "id": 1,
-      "reloadSound": -1
+      "id": 1
     },
     {
       "parts": 1,
@@ -61,8 +59,7 @@
       "launchSound": 2,
       "playReloadSound": true,
       "name": "RIFLE",
-      "id": 2,
-      "reloadSound": -1
+      "id": 2
     },
     {
       "parts": 1,
@@ -82,8 +79,7 @@
       "launchSound": 3,
       "playReloadSound": true,
       "name": "BAZOOKA",
-      "id": 3,
-      "reloadSound": -1
+      "id": 3
     },
     {
       "parts": 1,
@@ -103,8 +99,7 @@
       "launchSound": 4,
       "playReloadSound": true,
       "name": "DIRTBALL",
-      "id": 4,
-      "reloadSound": -1
+      "id": 4
     },
     {
       "parts": 3,
@@ -124,8 +119,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "EXPLOSIVES",
-      "id": 5,
-      "reloadSound": -1
+      "id": 5
     },
     {
       "parts": 1,
@@ -145,8 +139,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "MINE",
-      "id": 6,
-      "reloadSound": -1
+      "id": 6
     },
     {
       "parts": 1,
@@ -166,8 +159,7 @@
       "launchSound": 2,
       "playReloadSound": true,
       "name": "WINCHESTER",
-      "id": 7,
-      "reloadSound": -1
+      "id": 7
     },
     {
       "parts": 2,
@@ -187,8 +179,7 @@
       "launchSound": 6,
       "playReloadSound": true,
       "name": "DOOMSDAY",
-      "id": 8,
-      "reloadSound": -1
+      "id": 8
     },
     {
       "parts": 2,
@@ -208,8 +199,7 @@
       "launchSound": -1,
       "playReloadSound": false,
       "name": "FLAMER",
-      "id": 9,
-      "reloadSound": -1
+      "id": 9
     },
     {
       "parts": 1,
@@ -229,8 +219,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "GRENADE",
-      "id": 10,
-      "reloadSound": -1
+      "id": 10
     },
     {
       "parts": 1,
@@ -250,8 +239,7 @@
       "launchSound": 6,
       "playReloadSound": true,
       "name": "LARPA",
-      "id": 11,
-      "reloadSound": -1
+      "id": 11
     },
     {
       "parts": 1,
@@ -271,8 +259,7 @@
       "launchSound": 4,
       "playReloadSound": true,
       "name": "BLASTER",
-      "id": 12,
-      "reloadSound": -1
+      "id": 12
     },
     {
       "parts": 1,
@@ -292,8 +279,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "BOUNCY MINE",
-      "id": 13,
-      "reloadSound": -1
+      "id": 13
     },
     {
       "parts": 1,
@@ -313,8 +299,7 @@
       "launchSound": 1,
       "playReloadSound": true,
       "name": "MINIGUN",
-      "id": 14,
-      "reloadSound": -1
+      "id": 14
     },
     {
       "parts": 1,
@@ -334,8 +319,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "CLUSTER BOMB",
-      "id": 15,
-      "reloadSound": -1
+      "id": 15
     },
     {
       "parts": 40,
@@ -355,8 +339,7 @@
       "launchSound": 0,
       "playReloadSound": true,
       "name": "SUPER SHOTGUN",
-      "id": 16,
-      "reloadSound": -1
+      "id": 16
     },
     {
       "parts": 1,
@@ -376,8 +359,7 @@
       "launchSound": 1,
       "playReloadSound": true,
       "name": "HANDGUN",
-      "id": 17,
-      "reloadSound": -1
+      "id": 17
     },
     {
       "parts": 1,
@@ -397,8 +379,7 @@
       "launchSound": -1,
       "playReloadSound": true,
       "name": "GREENBALL",
-      "id": 18,
-      "reloadSound": -1
+      "id": 18
     },
     {
       "parts": 1,
@@ -418,8 +399,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "BIG NUKE",
-      "id": 19,
-      "reloadSound": -1
+      "id": 19
     },
     {
       "parts": 1,
@@ -439,8 +419,7 @@
       "launchSound": 5,
       "playReloadSound": true,
       "name": "CRACKLER",
-      "id": 20,
-      "reloadSound": -1
+      "id": 20
     },
     {
       "parts": 1,
@@ -460,8 +439,7 @@
       "launchSound": 6,
       "playReloadSound": true,
       "name": "P ZIMM",
-      "id": 21,
-      "reloadSound": -1
+      "id": 21
     },
     {
       "parts": 1,
@@ -481,8 +459,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "MINI NUKE",
-      "id": 22,
-      "reloadSound": -1
+      "id": 22
     },
     {
       "parts": 1,
@@ -502,8 +479,7 @@
       "launchSound": 5,
       "playReloadSound": true,
       "name": "FLOAT MINE",
-      "id": 23,
-      "reloadSound": -1
+      "id": 23
     },
     {
       "parts": 1,
@@ -523,8 +499,7 @@
       "launchSound": -1,
       "playReloadSound": false,
       "name": "FAN",
-      "id": 24,
-      "reloadSound": -1
+      "id": 24
     },
     {
       "parts": 1,
@@ -544,8 +519,7 @@
       "launchSound": 3,
       "playReloadSound": true,
       "name": "HELLRAIDER",
-      "id": 25,
-      "reloadSound": -1
+      "id": 25
     },
     {
       "parts": 1,
@@ -565,8 +539,7 @@
       "launchSound": 11,
       "playReloadSound": true,
       "name": "CANNON",
-      "id": 26,
-      "reloadSound": -1
+      "id": 26
     },
     {
       "parts": 1,
@@ -586,8 +559,7 @@
       "launchSound": 6,
       "playReloadSound": true,
       "name": "BOUNCY LARPA",
-      "id": 27,
-      "reloadSound": -1
+      "id": 27
     },
     {
       "parts": 1,
@@ -607,18 +579,17 @@
       "launchSound": -1,
       "playReloadSound": true,
       "name": "LASER",
-      "id": 28,
-      "reloadSound": -1
+      "id": 28
     },
     {
-      "parts": 8,
+      "parts": 4,
       "bulletType": 29,
       "bulletSpeed": 1.100000023841858,
       "bulletSpeedInherit": 0.9090909361839294,
       "distribution": 0.3662109375,
       "recoil": 0,
       "ammo": 2,
-      "delay": 30,
+      "delay": 40,
       "loadingTime": 9000,
       "leaveShells": 0,
       "leaveShellDelay": 1,
@@ -628,8 +599,7 @@
       "launchSound": 5,
       "playReloadSound": true,
       "name": "P SPIKEBALLS",
-      "id": 29,
-      "reloadSound": -1
+      "id": 29
     },
     {
       "parts": 1,
@@ -649,8 +619,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "NAPALM",
-      "id": 30,
-      "reloadSound": -1
+      "id": 30
     },
     {
       "parts": 1,
@@ -670,8 +639,7 @@
       "launchSound": 1,
       "playReloadSound": true,
       "name": "UZI",
-      "id": 31,
-      "reloadSound": -1
+      "id": 31
     },
     {
       "parts": 1,
@@ -691,8 +659,7 @@
       "launchSound": 3,
       "playReloadSound": true,
       "name": "MISSILE",
-      "id": 32,
-      "reloadSound": -1
+      "id": 32
     },
     {
       "parts": 1,
@@ -712,8 +679,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "CHIQUITA BOMB",
-      "id": 33,
-      "reloadSound": -1
+      "id": 33
     },
     {
       "parts": 1,
@@ -723,7 +689,7 @@
       "distribution": 0.30517578125,
       "recoil": 0,
       "ammo": 4,
-      "delay": 20,
+      "delay": 40,
       "loadingTime": 9000,
       "leaveShells": 0,
       "leaveShellDelay": 1,
@@ -733,8 +699,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "P BOOBY TRAP",
-      "id": 34,
-      "reloadSound": -1
+      "id": 34
     },
     {
       "parts": 1,
@@ -754,8 +719,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "GRASSHOPPER",
-      "id": 35,
-      "reloadSound": -1
+      "id": 35
     },
     {
       "parts": 1,
@@ -775,8 +739,7 @@
       "launchSound": 6,
       "playReloadSound": true,
       "name": "MINI ROCKETS",
-      "id": 36,
-      "reloadSound": -1
+      "id": 36
     },
     {
       "parts": 1,
@@ -796,8 +759,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "DART",
-      "id": 37,
-      "reloadSound": -1
+      "id": 37
     },
     {
       "parts": 1,
@@ -817,8 +779,7 @@
       "launchSound": 1,
       "playReloadSound": true,
       "name": "RB RAMPAGE",
-      "id": 38,
-      "reloadSound": -1
+      "id": 38
     },
     {
       "parts": 5,
@@ -838,19 +799,18 @@
       "launchSound": 10,
       "playReloadSound": true,
       "name": "GAUSS GUN",
-      "id": 39,
-      "reloadSound": -1
+      "id": 39
     },
     {
       "parts": 1,
       "bulletType": 40,
-      "bulletSpeed": 3,
-      "bulletSpeedInherit": 0.5,
+      "bulletSpeed": 2.5,
+      "bulletSpeedInherit": 0,
       "distribution": 0,
       "recoil": 1,
       "ammo": 1,
-      "delay": 10,
-      "loadingTime": 125,
+      "delay": 30,
+      "loadingTime": 150,
       "leaveShells": 0,
       "leaveShellDelay": 0,
       "fireCone": 0,
@@ -859,8 +819,7 @@
       "launchSound": 5,
       "playReloadSound": false,
       "name": "P BITE",
-      "id": 40,
-      "reloadSound": -1
+      "id": 40
     }
   ],
   "wObjects":
@@ -2883,9 +2842,9 @@
       "affectByExplosions": 0,
       "bounce": 0,
       "bounceFriction": 0,
-      "timeToExplo": 6,
+      "timeToExplo": 3,
       "timeToExploV": 0,
-      "hitDamage": 80,
+      "hitDamage": 25,
       "bloodOnHit": 50,
       "startFrame": 516,
       "numFrames": 0,
@@ -2902,7 +2861,7 @@
       "partTrailType": 0,
       "partTrailObj": -1,
       "partTrailDelay": 1,
-      "speed": 250,
+      "speed": 200,
       "immutable": 4,
       "fixed": false,
       "platform": false,
@@ -4153,9 +4112,7 @@
       "name": "tid 8"
     }
   ],
-  "behaviors":
-  [
-  ],
+  "behaviors": [],
   "colorAnim":
   [
     129,
