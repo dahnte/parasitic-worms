@@ -9,29 +9,73 @@ class Round {
 		this.parasiticHost = null;
 		this.hostLoadout = ['40', '29', '21', '34', '30', '1', '2', '2', '4', '2'];
 		this.parasiteLoadout = ['40', '40', '40', '40', '40', '1', '1', '1', '1', '1'];
+		this.playerList = new Map();
 		this.endFlag = 0;
-		this.playerListId = [];
     }
     start() {
-        if (room.getPlayerList().length < 3) {
-            throw new Error("Need at least three players to start!");
+        if (room.getPlayerList().length < 2) {
+            throw new Error("Need at least two players to start!");
         }
         this.state = "playing";
     }
 }
+var specList = new Map(); // potentially dangerous!
+var round = new Round();
+var modCache = new Map();
+const admins = new Set(["6zgUYjs_v504BzseshPSLgv7B4A3TU1v-jl0BMISJtA"]); // Add your own player auth here.
 const messages = [
-	"Welcome to Parasitic Worms: Extended! For more information visit: https://github.com/dahnte/parasitic-worms",
+	"Welcome to Parasitic Worms! ☣Extended☣. Type !h for a list of chat commands. For more information visit: https://github.com/dahnte/parasitic-worms",
 	"Huddle around the campfire as the parasites seek out their host.",
 	"Parasites have begun their infestation. You are now a parasite and must infect the remaining blue worms!",
-	"**WARNING** Configure your loadout before spawning! This will be your blue team loadout, avoid the prefix 'P'!",
+	"⚠️WARNING⚠️ Configure your loadout before spawning! This will be your blue team loadout, avoid the prefix 'P'!",
 	"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
 ];
 console.log("Running Server...");
-const admins = new Set(["6zgUYjs_v504BzseshPSLgv7B4A3TU1v-jl0BMISJtA"]); // Add your own player auth here.
-var round = new Round();
+const chatCommands = {
+	s: function (player) {
+		if (!specList.has(player.id)) {
+			specList.set(player.id, player);
+		}
+		else {
+			throw new Error("You're already spectating!");
+		}
+		if (round.state == "playing") {
+			if (player.id == round.parasiticHost.id) {
+				getRemainingGreen();
+				if (round.remainingParasites > 0) {
+					selectParasiticHost(1);
+				}
+				else {
+					selectParasiticHost(2);
+				}
+			}
+		}
+		room.setPlayerTeam(player.id, 0);
+	},
+	j: function (player) {
+		if(specList.has(player.id)) {
+			specList.delete(player.id);
+		}
+		else {
+			throw new Error("You're already playing!");
+		}
+		if(round.state == "playing") {
+			room.setPlayerTeam(player.id, 1);
+		}
+		else {
+			throw new Error("Waiting for round to start");
+		}
+	},
+	h: function (player) {
+		room.sendAnnouncement("Chat commands:", player.id, 0xFFFFFF, "normal", 0);
+		room.sendAnnouncement("!s - To join the spectator team", player.id, 0xFFFFFF, "normal", 0);
+		room.sendAnnouncement("!j - To rejoin the game from the spectator team", player.id, 0xFFFFFF, "normal", 0);
+		room.sendAnnouncement("!h - To list these commands again", player.id, 0xFFFFFF, "normal", 0);
+	}
+};
 const room = window.WLInit({
     token: window.WLTOKEN,
-    roomName: "Parasitic Worms: Extended!",
+    roomName: "Parasitic Worms! ☣Extended☣",
     maxPlayers: 12,
     public: true,
 });
@@ -44,23 +88,26 @@ room.setSettings({
 });
 function moveAllPlayersToBlue() {
     for (let player of room.getPlayerList()) {
-        room.setPlayerTeam(player.id, 2);
+		if (!specList.has(player.id)) {
+			room.setPlayerTeam(player.id, 2);
+		}
     }
 }
 function selectParasiticHost(selectedTeam) {
-	round.playerListId = [];
-	let index = 0;
+	round.playerList.clear();
+	var playerIndex = 0;
 	for (let player of room.getPlayerList()) {
 		if (player.team == selectedTeam) {
-			round.playerListId[index] = player.id;
-			index++;
+			round.playerList.set(playerIndex, player);
+			playerIndex++;
 		}
 	}
-	let randomIndex = Math.floor(Math.random() * round.playerListId.length);
-	round.parasiticHost = room.getPlayer(round.playerListId[randomIndex]);
+	let randomIndex = Math.floor(Math.random() * round.playerList.size);
+	round.parasiticHost = round.playerList.get(randomIndex);
 	if (round.parasiticHost != null) {
 		room.setPlayerTeam(round.parasiticHost.id, 1);
-		room.sendAnnouncement(`${round.parasiticHost.name} has become the parasitic host. The parasitic host is the only parasite that is equipped with ranged attacks!`, undefined, 0xF40000, "bold");
+		room.sendAnnouncement(`${round.parasiticHost.name} has become the parasitic host.`, undefined, 0xF40000, "bold");
+		room.sendAnnouncement("The parasitic host is the only parasite that is equipped with ranged weapons!", undefined, 0xF40000, "normal");
 		room.sendAnnouncement("Careful, death of any cause will result in parasitic infection.", undefined, 0xF40000, "normal");
 		room.setPlayerWeapons(round.parasiticHost.id, round.hostLoadout);
 	}
@@ -86,6 +133,23 @@ function getRemainingGreen() {
 	}
 	round.remainingParasites = remainingGreen;
 }
+async function getModData(modUrl) {    
+    let obj = modCache.get(modUrl)
+    if (obj) {
+      return obj;
+    }
+    try {
+        obj = await (await fetch(modUrl)).arrayBuffer();        
+    }catch(e) {
+        return null;
+    }
+    modCache.set(modUrl, obj)
+    return obj;
+}
+async function loadMod(modname) {
+    const mod = await getModData(modname)
+    window.WLROOM.loadMod(mod);
+}
 function* waitForSeconds(seconds) {
     const end = window.performance.now() + seconds * 1000;
     while (window.performance.now() < end) {
@@ -93,12 +157,11 @@ function* waitForSeconds(seconds) {
     }
 }
 function* roundLogic() {
-    round = new Round();
 	while (round.state == "new") {
 		//TODO: allow for players to DM before round start
 		yield* waitForSeconds(8);
-		if (room.getPlayerList().length < 3) {
-			room.sendAnnouncement("Need at least three players to start!");
+		if ((room.getPlayerList().length - specList.size) < 2) {
+			room.sendAnnouncement("Need at least two players to start!");
 		}
 		else {
 			round.start();	
@@ -145,30 +208,11 @@ function* roundLogic() {
 			break;
 		}
 	}
-	if ((round.endFlag == 1) || (room.getPlayerList().length < 3)) {
+	if (((room.getPlayerList().length - specList.size) < 2) || (round.endFlag == 1)) {
 		room.endGame();
+		round.state = "new";
 		t = roundLogic();
 	}
-}
-var modCache = new Map();
-async function getModData(modUrl) {    
-    let obj = modCache.get(modUrl)
-    if (obj) {
-      return obj;
-    }
-    try {
-        obj = await (await fetch(modUrl)).arrayBuffer();        
-    }catch(e) {
-        return null;
-    }
-
-    
-    modCache.set(modUrl, obj)
-    return obj;
-}
-async function loadMod(modname) {
-    const mod = await getModData(modname)
-    window.WLROOM.loadMod(mod);
 }
 room.onRoomLink = (link) => console.log(link);
 room.onCaptcha = () => console.log("Invalid token");
@@ -212,20 +256,31 @@ room.onPlayerSpawn = (player) => {
 			room.setPlayerWeapons(player.id, round.parasiteLoadout);
 		}
 	}
-	/*
-	if (player.team == 2) {
-		let playerWeapons = [];
-		for (let weapon of window.WLROOM.getPlayerWeapons(player.id)) {
-			if (weapon.id == '40' || weapon.id == '29' || weapon.id == '21' || weapon.id == '34') {
-				playerWeapons[weapon.index] = '3';
+};
+room.onPlayerChat = (player, message) => {
+	if (message[0] == "!") {
+		const commandText = message.substr(1).split("");
+		console.log(`Command: ${commandText.join(" ")}`);
+		const command = chatCommands[commandText[0]];
+		if (command == null) {
+			room.sendAnnouncement(`Unrecognized command: ${commandText[0]}`, player.id);
+		}
+		else {
+			try {
+				command(player);
 			}
-			else {
-				playerWeapons[weapon.index] = weapon.id;
+			catch (e) {
+				if (e instanceof Error) {
+					room.sendAnnouncement(`Error: ${e.message}`, player.id);
+				}
+				else { 
+					room.sendAnnouncement(`Unknown Error!`, player.id);
+				}
 			}
 		}
-		window.WLROOM.setPlayerWeapons(player.id, playerWeapons);
+		return false;
 	}
- */
+	return true;
 };
 let t = roundLogic();
 setInterval(() => t.next(), 100);
