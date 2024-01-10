@@ -13,7 +13,7 @@ class Round {
 		this.endFlag = 0;
     }
     start() {
-        if (room.getPlayerList().length < 2) {
+        if ((room.getPlayerList().length - specList.size) < 2) {
             throw new Error("Need at least two players to start!");
         }
         this.state = "playing";
@@ -31,6 +31,7 @@ const messages = [
 	"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
 ];
 console.log("Running Server...");
+
 const chatCommands = {
 	s: function (player) {
 		if (!specList.has(player.id)) {
@@ -77,7 +78,7 @@ const room = window.WLInit({
     token: window.WLTOKEN,
     roomName: "Parasitic Worms! ☣Extended☣",
     maxPlayers: 12,
-    public: true,
+    public: false,
 });
 window.WLROOM = room;
 room.setSettings({  
@@ -86,6 +87,7 @@ room.setSettings({
     damageMultiplier: 1,
 	levelPool: "allBest",
 });
+
 function moveAllPlayersToBlue() {
     for (let player of room.getPlayerList()) {
 		if (!specList.has(player.id)) {
@@ -93,6 +95,7 @@ function moveAllPlayersToBlue() {
 		}
     }
 }
+
 function selectParasiticHost(selectedTeam) {
 	round.playerList.clear();
 	var playerIndex = 0;
@@ -109,12 +112,14 @@ function selectParasiticHost(selectedTeam) {
 		room.sendAnnouncement(`${round.parasiticHost.name} has become the parasitic host.`, undefined, 0xF40000, "bold");
 		room.sendAnnouncement("The parasitic host is the only parasite that is equipped with ranged weapons!", undefined, 0xF40000, "normal");
 		room.sendAnnouncement("Careful, death of any cause will result in parasitic infection.", undefined, 0xF40000, "normal");
+		room.playSound("https://dahnte.github.io/liero/alertalert5_n_audioman.wav");
 		room.setPlayerWeapons(round.parasiticHost.id, round.hostLoadout);
 	}
 	else {
 		round.parasiticHost = null;
 	}
 }
+
 function getRemainingBlue() {
 	let remainingBlue = 0;
 	for (let player of room.getPlayerList()) {
@@ -124,6 +129,7 @@ function getRemainingBlue() {
 	}
 	round.remainingWorms = remainingBlue;
 }
+
 function getRemainingGreen() {
 	let remainingGreen = 0;
 	for (let player of room.getPlayerList()) { 
@@ -133,6 +139,7 @@ function getRemainingGreen() {
 	}
 	round.remainingParasites = remainingGreen;
 }
+
 async function getModData(modUrl) {    
     let obj = modCache.get(modUrl)
     if (obj) {
@@ -146,17 +153,22 @@ async function getModData(modUrl) {
     modCache.set(modUrl, obj)
     return obj;
 }
+
 async function loadMod(modname) {
     const mod = await getModData(modname)
     window.WLROOM.loadMod(mod);
 }
+
 function* waitForSeconds(seconds) {
     const end = window.performance.now() + seconds * 1000;
     while (window.performance.now() < end) {
         yield null;
     }
 }
+
+//FIX BROKEN LOGIC
 function* roundLogic() {
+	round = new Round();
 	while (round.state == "new") {
 		//TODO: allow for players to DM before round start
 		yield* waitForSeconds(8);
@@ -172,48 +184,56 @@ function* roundLogic() {
 	selectParasiticHost(2);
     while (round.state == "playing") {
         yield null;
-		room.onPlayerKilled = (killed, killer) => {
-			if (killed.team == 2) {
-				room.setPlayerTeam(killed.id, 1);
-				room.sendAnnouncement(`${killed.name} has been infected!`, undefined, 0xF40000, "normal");
-				if (round.livesAdded == 1) {
-					room.sendAnnouncement(`The parasites gained ${round.livesAdded} life!`);
-				}
-				else {
-					room.sendAnnouncement(`The parasites gained ${round.livesAdded} lives!`);
-				}
-				round.lives = round.lives + round.livesAdded;
-			}
-			if (killed.team == 1) {
-				room.createBonus(-2, killed.x, killed.y, null)
-				round.lives--;
-				if (round.lives == 1) {
-					room.sendAnnouncement(`The parasites have ${round.lives} life remaining!`);
-				}
-				else {
-					room.sendAnnouncement(`The parasites have ${round.lives} lives remaining!`);
-				}
-			}
-		};
+		//yield* waitForSeconds(2);
 		getRemainingGreen();
 		if (round.lives <= 0) {
+			room.playSound("https://dahnte.github.io/liero/bassloop_josefpres.wav");
 			room.sendAnnouncement("The worms have survived the parasitic onslaught!", undefined, 0x66CCFF, "bold");
 			round.endFlag = 1;
 			break;
 		}
+		//yield* waitForSeconds(2);
 		getRemainingBlue();
 		if (round.remainingWorms <= 0) {
+			room.playSound("https://dahnte.github.io/liero/darkswell_nfrae.wav");
 			room.sendAnnouncement("The parasites have successfully taken over the room!", undefined, 0xF40000, "bold");
 			round.endFlag = 1;
 			break;
 		}
 	}
-	if (((room.getPlayerList().length - specList.size) < 2) || (round.endFlag == 1)) {
+	if (round.endFlag == 1 && round.state == "playing") {
+		yield null;
 		room.endGame();
 		round.state = "new";
-		t = roundLogic();
+		t = roundLogic();	
 	}
 }
+
+room.onPlayerKilled = (killed, killer) => {
+	if (round.state == "playing") {
+		if (killed.team == 2) {
+			room.setPlayerTeam(killed.id, 1);
+			room.sendAnnouncement(`${killed.name} has been infected!`, undefined, 0xF40000, "normal");
+			if (round.livesAdded == 1) {
+				room.sendAnnouncement(`The parasites gained ${round.livesAdded} life!`);
+			}
+			else {
+				room.sendAnnouncement(`The parasites gained ${round.livesAdded} lives!`);
+			}
+			round.lives = round.lives + round.livesAdded;
+		}
+		if (killed.team == 1) {
+			room.createBonus(-2, killed.x, killed.y, null);
+			round.lives--;
+			if (round.lives == 1) {
+				room.sendAnnouncement(`The parasites have ${round.lives} life remaining!`);
+			}
+			else {
+				room.sendAnnouncement(`The parasites have ${round.lives} lives remaining!`);
+			}
+		}
+	}
+};
 room.onRoomLink = (link) => console.log(link);
 room.onCaptcha = () => console.log("Invalid token");
 room.onPlayerJoin = (player) => {
@@ -282,6 +302,7 @@ room.onPlayerChat = (player, message) => {
 	}
 	return true;
 };
+
 let t = roundLogic();
 setInterval(() => t.next(), 100);
 room.restartGame();
