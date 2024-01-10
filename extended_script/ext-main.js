@@ -157,6 +157,7 @@ function* waitForSeconds(seconds) {
     }
 }
 function* roundLogic() {
+	round = new Round();
 	while (round.state == "new") {
 		//TODO: allow for players to DM before round start
 		yield* waitForSeconds(8);
